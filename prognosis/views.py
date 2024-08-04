@@ -17,7 +17,7 @@ def get_latest_prognosis(request):
             data = json.loads(request.body)
             member_id = data.get('appleId')
             result = Prognosis.objects.filter(created_by=member_id).order_by('created_on')
-            if result.exists():
+            if not result.exists():
                 print("not result")
                 prognosis_instance = Prognosis.objects.create(created_by=member_id,
                                                               created_on=datetime.now(),
@@ -47,17 +47,16 @@ def new_prognosis(request):
             print("no body problem")
         else:
             data = json.loads(request.body)
-
             print("adding result")
-            prognosis_instance = Prognosis.objects.create(created_by = data.get('appleId'),
-                                                            created_on = datetime.now(),
-                                                            prognosis_champion = data.get('prognosis_champion'),
-                                                            prognosis_topscorer =  data.get('prognosis_topscorer'),
-                                                            prognosis_trainer_fired =  data.get('prognosis_trainer_fired'),
-                                                            prognosis_surprise = data.get('prognosis_surprise'),
-                                                            prognosis_disappointment = data.get('prognosis_disappointment'),
-                                                            prognosis_hottake = data.get('prognosis_hottake')
-                                                            )
+            prognosis_instance = Prognosis.objects.create(created_by=data.get('appleId'),
+                                                          created_on=datetime.now(),
+                                                          prognosis_champion=data.get('prognosis_champion'),
+                                                          prognosis_topscorer=data.get('prognosis_topscorer'),
+                                                          prognosis_trainer_fired=data.get('prognosis_trainer_fired'),
+                                                          prognosis_surprise=data.get('prognosis_surprise'),
+                                                          prognosis_disappointment=data.get('prognosis_disappointment'),
+                                                          prognosis_hottake=data.get('prognosis_hottake')
+                                                          )
             prognosis_dict = model_to_dict(prognosis_instance)
             return JsonResponse(prognosis_dict)
     except json.JSONDecodeError:
