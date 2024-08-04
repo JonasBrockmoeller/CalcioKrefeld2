@@ -17,7 +17,7 @@ def get_latest_prognosis(request):
             data = json.loads(request.body)
             member_id = data.get('appleId')
             result = Prognosis.objects.filter(created_by=member_id).order_by('created_on')
-            if not result:
+            if result.exists():
                 print("not result")
                 prognosis_instance = Prognosis.objects.create(created_by=member_id,
                                                               created_on=datetime.now(),
